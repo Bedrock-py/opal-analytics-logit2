@@ -1,0 +1,12 @@
+{ "opal-analytics-clustering":
+        {
+    	    "description": "Default clustering algorithms",
+            "units": "Dbscan.py Gaussian.py Hierclust.py JinguNMF.py Kmeans.py",
+            "supports": "",
+            "python_dependencies": "numpy scipy sklearn",
+            "system_dependencies": "",
+            "api": "analytics",
+            "interface": "analytics",
+            "installation_script": ""
+        }
+}
