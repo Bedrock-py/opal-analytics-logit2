@@ -15,7 +15,7 @@ from bedrock.analytics.utils import Algorithm
 
 class Logit2(Algorithm):
     def __init__(self):
-        super(Kmeans, self).__init__()
+        super(Logit2, self).__init__()
         self.parameters = ['']
         self.inputs = ['matrix.csv']
         self.outputs = ['matrix.csv']
