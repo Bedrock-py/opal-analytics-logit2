@@ -6,10 +6,17 @@
 # setwd("C:/Users/pablo_diego-rosell/Desktop/Projects/DARPA/Cycle 1/Research Protocols/Registration/Experiment 1/Rand2011PNAS_data_and_code")
 cooperation<-read.csv(commandArgs(TRUE)[1])
 
-install.packages("multiwayvcov")
-install.packages("lmtest")
-library ("multiwayvcov")
-library ("lmtest")
+# Install function for packages    
+packages<-function(x){
+  x<-as.character(match.call()[[2]])
+  if (!require(x,character.only=TRUE)){
+    install.packages(pkgs=x,repos="http://cran.cnr.berkeley.edu")
+    require(x,character.only=TRUE)
+  }
+}
+packages(multiwayvcov)
+packages(lmtest)
+
 
 #STATA LINES
 # char condition[omit] "Fluid"
