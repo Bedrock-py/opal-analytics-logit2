@@ -21,14 +21,11 @@ class Logit2(Algorithm):
         self.outputs = ['matrix.csv']
         self.name ='Logit2'
         self.type = 'Logit'
-        self.description = 'Performs Logit2 the input dataset.'
+        self.description = 'Performs Logit2 analysis on the input dataset.'
         self.parameters_spec = []
 
     def compute(self, filepath, **kwargs):
         path = filepath['matrix.csv']['rootdir'] + 'matrix.csv'
-
-
-        path = '/home/tgoodyear/projects/ngss/opal-analytics-logit2/Rand2011PNAS_cooperation_data.csv'
         cmd = ['Rscript','logit2.R',path]
         x = subprocess.check_output(cmd, universal_newlines=True)
         tailStartChar = "Pr(>|z|)"
