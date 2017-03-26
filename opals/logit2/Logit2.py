@@ -1,14 +1,4 @@
-#****************************************************************
-# Copyright (c) 2015, Georgia Tech Research Institute
-# All rights reserved.
-#
-# This unpublished material is the property of the Georgia Tech
-# Research Institute and is protected under copyright law.
-# The methods and techniques described herein are considered
-# trade secrets and/or confidential. Reproduction or distribution,
-# in whole or in part, is forbidden except by the express written
-# permission of the Georgia Tech Research Institute.
-#****************************************************************/
+
 import subprocess
 import os
 from bedrock.analytics.utils import Algorithm 
@@ -23,7 +13,7 @@ class Logit2(Algorithm):
         self.name ='Logit2'
         self.type = 'Logit'
         self.description = 'Performs Logit2 analysis on the input dataset.'
-        self.parameters_spec = []
+        self.parameters_spec = [{ "name" : "AnalysisStep", "attrname" : "step", "value" : 1, "type" : "input" , "step": 1, "max": 11, "min": 1}]
 
     def compute(self, filepath, **kwargs):
         
@@ -42,7 +32,7 @@ class Logit2(Algorithm):
 
         # Run R script
         Rpath = os.path.dirname(os.path.abspath(__file__))
-        cmd = ['Rscript',Rpath+'/logit2.R',newMatrixPath]
+        cmd = ['Rscript',Rpath+'/logit2.R',newMatrixPath,self.step]
 
         # Parse output
         x = subprocess.check_output(cmd, universal_newlines=True)
