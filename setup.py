@@ -50,11 +50,11 @@ setup(
     long_description=long_description,
 
     # The project's main homepage.
-    url='https://github.gatech.edu/Bedrock/opal-analytics-logit2',
+    url='https://github.com/bedrock-py/opal-analytics-logit2',
 
     # Author details
     author='Georgia Tech Research Institute',
-    author_email='trevor.goodyear@gtri.gatech.edu',
+    author_email='jason.poovey@gtri.gatech.edu',
 
     # Choose your license
     license='GPL',
@@ -74,7 +74,7 @@ setup(
     ],
 
     # What does your project relate to?
-    keywords='analytics machinelearning',
+    keywords='analytics stats',
 
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
@@ -94,7 +94,8 @@ setup(
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
     install_requires=[
-        'bedrock'
+        'bedrock',
+        'statsmodels'
         ],
 
     # List additional groups of dependencies here (e.g. development
@@ -108,7 +109,6 @@ setup(
     # installed, specify them here.  If using Python 2.6 or less, then these
     # have to be included in MANIFEST.in as well.
     package_data={
-         '': ['opals/logit2/logit2.R'],
     },
 
     # Although 'package_data' is the preferred approach, in some case you may

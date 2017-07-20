@@ -1,8 +1,17 @@
 
 import subprocess
 import os
-from bedrock.analytics.utils import Algorithm 
+from bedrock.analytics.utils import Algorithm
+import pandas as pd
+import logging
+import statsmodels.api as sm
+import csv
 
+def check_valid_formula(formula):
+    # TODO: Look at `patsy` for helper function to validate more fully
+    if (len(formula.split('~')) < 2):
+        logging.error("Formula does not have ~")
+        return False
 
 class Logit2(Algorithm):
     def __init__(self):
@@ -13,38 +22,68 @@ class Logit2(Algorithm):
         self.name ='Logit2'
         self.type = 'Logit'
         self.description = 'Performs Logit2 analysis on the input dataset.'
-        self.parameters_spec = [{ "name" : "AnalysisStep", "attrname" : "step", "value" : 1, "type" : "input" , "step": 1, "max": 11, "min": 1}]
+        self.parameters_spec = [
+            { "name" : "Regression Formula", "attrname" : "formula", "value" : "", "type" : "input" },
+            { "name" : "GLM family", "attrname" : "family", "value" : "binomial", "type" : "input" },
+            { "name" : "Clustered Error Covariates", "attrname" : "clustered_rse" , "value" : "", "type" : "input"}
+        ]
 
-    def compute(self, filepath, **kwargs):
-        
-        # Add headers to csv
+    def check_parameters(self):
+        logging.error("Started check parms")
+        super(Logit2, self).check_parameters()
+
+        if(check_valid_formula(self.formula) == False):
+            return False
+
+        self.family = self.family.lower()
+
+        if (self.family != "binomial" and self.family != "gaussian"):
+            logging.error("GLM family {} not supported".format(self.family))
+            return False
+
+        return True
+
+    def __build_df__(self, filepath):
         featuresPath = filepath['features.txt']['rootdir'] + 'features.txt'
         matrixPath = filepath['matrix.csv']['rootdir'] + 'matrix.csv'
-        newMatrixPath = filepath['matrix.csv']['rootdir'] + 'matrix_with_header.csv'
-        features = ''
-        with open(featuresPath,'r') as f:
-            features = ','.join(f.read().splitlines())
+        df = pd.read_csv(matrixPath, header=-1)
+        featuresList = pd.read_csv(featuresPath, header=-1)
 
-        cmd = 'echo "{0}" | cat - {1} > {2}'.format(features,matrixPath,newMatrixPath)
-        # print cmd
-        x = subprocess.check_call(cmd, shell=True)
+        df.columns = featuresList.T.values[0]
 
+        return df
 
-        # Run R script
-        Rpath = os.path.dirname(os.path.abspath(__file__))
-        cmd = ['Rscript',Rpath+'/logit2.R',newMatrixPath,self.step]
+    def compute(self, filepath, **kwargs):
+        df = self.__build_df__(filepath)
 
-        # Parse output
-        x = subprocess.check_output(cmd, universal_newlines=True)
-        tailStartChar = "Pr(>|z|)"
-        tailStart = x.find("Pr(>|z|)") + len(tailStartChar) + 4
-        tailEnd = x.find("---",tailStart)
-        resultHeader= [['','Estimate','StdErr','zValue','Pr_z']]
-        resultTable = [row.split() for row in x[tailStart:tailEnd].replace("*","").strip().split('\n')]
-        result = resultHeader + resultTable
-        print result
+        # TODO: Remove and make a filter.  For here for testing now
+        df = df.loc[df['round_num'] == 1]
 
-        # print resultTable
-        # print tailStart, tailEnd
+        f = sm.families.Binomial()
 
-        self.results = {'matrix.csv': result}
+        if self.family == "binomial":
+            f = sm.families.Binomial()
+        elif self.family == "gaussian":
+            f = sm.families.Gaussian()
+        else:
+            f = None
+
+        glm = sm.GLM.from_formula(self.formula, df, family=f)
+
+        clusters = self.clustered_rse.split(",")
+
+        if len(clusters) > 0:
+            if len(clusters) > 2:
+                clusters = clusters[0:2]
+
+            groups = [df[c] for c in clusters]
+
+            model = glm.fit(cov_type='cluster', cov_kwds={'groups':groups})
+        else:
+            model = glm.fit()
+
+        summary = model.summary2()
+        coef_table = summary.tables[1]
+        logging.error(coef_table.to_csv())
+
+        self.results = {'matrix.csv': list(csv.reader(coef_table.to_csv().split('\n')))}
