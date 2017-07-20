@@ -56,9 +56,6 @@ class Logit2(Algorithm):
     def compute(self, filepath, **kwargs):
         df = self.__build_df__(filepath)
 
-        # TODO: Remove and make a filter.  For here for testing now
-        df = df.loc[df['round_num'] == 1]
-
         f = sm.families.Binomial()
 
         if self.family == "binomial":
