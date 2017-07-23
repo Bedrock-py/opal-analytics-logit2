@@ -3,15 +3,17 @@ opal-analytics-logit2
 
 ## Installation
 
-pip install git+https://github.com/Bedrock-py/opal-analytics-logit2.git
+`pip install git+https://github.com/Bedrock-py/opal-analytics-logit2.git`
 
 ## Parameters Spec for Bedrock
 
-`self.parameters_spec = [
+```
+self.parameters_spec = [
     { "name" : "Regression Formula", "attrname" : "formula", "value" : "", "type" : "input" },
     { "name" : "GLM family", "attrname" : "family", "value" : "binomial", "type" : "input" },
     { "name" : "Clustered Error Covariates", "attrname" : "clustered_rse" , "value" : "", "type" : "input"}
-]`
+]
+```
 
 * `formula` A R-style formula for regression given as a string
 * `family` Either `binomial` for logistic regression or `gaussian` for OLS
