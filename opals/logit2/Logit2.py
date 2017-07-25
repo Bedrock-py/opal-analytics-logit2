@@ -18,7 +18,7 @@ class Logit2(Algorithm):
         super(Logit2, self).__init__()
         self.parameters = []
         self.inputs = ['matrix.csv','features.txt']
-        self.outputs = ['matrix.csv']
+        self.outputs = ['matrix.csv', 'summary.csv']
         self.name ='Logit2'
         self.type = 'Logit'
         self.description = 'Performs Logit2 analysis on the input dataset.'
@@ -83,4 +83,10 @@ class Logit2(Algorithm):
         coef_table = summary.tables[1]
         logging.error(coef_table.to_csv())
 
-        self.results = {'matrix.csv': list(csv.reader(coef_table.to_csv().split('\n')))}
+        model_summary = [
+            ["AIC",model.aic],
+            ["deviance",model.deviance],
+            ["peasron_chi2",model.pearson_chi2]
+        ]
+
+        self.results = {'matrix.csv': list(csv.reader(coef_table.to_csv().split('\n'))), 'summary.csv': model_summary}

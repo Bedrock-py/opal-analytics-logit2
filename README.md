@@ -28,3 +28,4 @@ self.parameters_spec = [
 ## Outputs the following files
 
 `matrix.csv` The coefficient table output from the GLM model
+`summary.csv` Summary metrics for the model fit
