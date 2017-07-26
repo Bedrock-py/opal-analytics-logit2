@@ -67,7 +67,10 @@ class Logit2(Algorithm):
 
         glm = sm.GLM.from_formula(self.formula, df, family=f)
 
-        clusters = self.clustered_rse.split(",")
+        if self.clustered_rse != "":
+            clusters = self.clustered_rse.split(",")
+        else:
+            clusters = []
 
         if len(clusters) > 0:
             if len(clusters) > 2:
