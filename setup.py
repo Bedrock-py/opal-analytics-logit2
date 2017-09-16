@@ -16,7 +16,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 def opalRegistration():
     from bedrock.core.opals import manage_opals
-    algs = ['Logit2']
+    algs = ['Logit2','GLMer']
     for alg in algs:
         success = manage_opals("add","analytics","opals.logit2.{0}.{0}".format(alg))
         if (success == False):
