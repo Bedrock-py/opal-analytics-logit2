@@ -95,7 +95,8 @@ setup(
     # https://packaging.python.org/en/latest/requirements.html
     install_requires=[
         'bedrock',
-        'statsmodels'
+        'statsmodels',
+        'rpy==2.8.2'
         ],
 
     # List additional groups of dependencies here (e.g. development
