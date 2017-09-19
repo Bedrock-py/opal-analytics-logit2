@@ -96,7 +96,7 @@ setup(
     install_requires=[
         'bedrock',
         'statsmodels',
-        'rpy==2.8.2'
+        'rpy2==2.8.2'
         ],
 
     # List additional groups of dependencies here (e.g. development
