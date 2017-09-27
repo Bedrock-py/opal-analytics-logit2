@@ -76,7 +76,10 @@ class Logit2(Algorithm):
             if len(clusters) > 2:
                 clusters = clusters[0:2]
 
-            groups = [df[c] for c in clusters]
+            for c in clusters:
+                df['{}_fact'.format(c)] = pd.factorize(df[c])[0]
+
+            groups = [df['{}_fact'.format(c)] for c in clusters]
 
             model = glm.fit(cov_type='cluster', cov_kwds={'groups':groups})
         else:
