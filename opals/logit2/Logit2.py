@@ -90,8 +90,8 @@ class Logit2(Algorithm):
         out_df = r('out_df <- data.frame(tidy(output))')
 
         model_summary = [
-            ["AIC",r('AIC(model)')],
-            ["deviance",r('deviance(model)')]
+            ["AIC",r('AIC(model)')[0]],
+            ["deviance",r('deviance(model)')[0]]
         ]
 
         self.results = {'matrix.csv': list(csv.reader(out_df.to_csv().split('\n'))), 'summary.csv': model_summary}
