@@ -89,7 +89,12 @@ class Logit2(Algorithm):
         output = r(outputString)
         out_df = r('out_df <- data.frame(tidy(output))')
 
-        self.results = {'matrix.csv': list(csv.reader(out_df.to_csv().split('\n'))), 'summary.csv': list(csv.reader(out_df.to_csv().split('\n')))}
+        model_summary = [
+            ["AIC",r('AIC(model)')],
+            ["deviance",r('deviance(model)')]
+        ]
+
+        self.results = {'matrix.csv': list(csv.reader(out_df.to_csv().split('\n'))), 'summary.csv': model_summary}
         """
         f = sm.families.Binomial()
 
